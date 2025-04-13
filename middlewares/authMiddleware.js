@@ -6,10 +6,7 @@ const authMiddleware = async (req, res, next) => {
     req.user = await User.findOne({email: decoded.email}).select("-password");
     next();
   }else{
-    res.status(401).json({ message: "Unauthorized" });
-  }
-  if(!req.cookies.token){
-    res.status(401).json({ message: "bhai Token create kr pehle" });
+    res.status(401).json({ message: "Unauthorized : bhai token create kr pehle" });
   }
 };
 
