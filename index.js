@@ -2,28 +2,20 @@ const express = require("express");
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 const cors = require("cors");
-
+const cookieParser = require("cookie-parser");
 dotenv.config();
-
 const app = express();
 app.use(cors());
 app.use(express.json());
+app.use(cookieParser());
+app.use(express.urlencoded({ extended: true }));
 
-// Routes
-const authRoutes = require("./routes/authRoutes");
-app.use("/api/auth", authRoutes);
+
+const userRoutes = require("./routes/user");
+app.use("/api/user", userRoutes);
 
 // Sample protected routes
-const { verifyToken } = require("./middleware/authMiddleware");
-const { checkRole } = require("./middleware/roleMiddleware");
 
-app.get("/api/user/profile", verifyToken, (req, res) => {
-  res.json({ message: "Welcome user!", user: req.user });
-});
-
-app.get("/api/admin/data", verifyToken, checkRole("admin"), (req, res) => {
-  res.json({ message: "Hello Admin!", user: req.user });
-});
 
 mongoose
   .connect(process.env.MONGO_URI)
